@@ -152,6 +152,49 @@
 
 
 
+// pipeline {
+//     agent any
+    
+//     environment {
+//         PATH = "$PATH:/opt/apache-maven-3.6.3/bin"
+//     }
+
+//     stages {
+//         stage('ContinuousDownload') {
+//             steps {
+//                 git "https://github.com/MRaju2022/maven.git"
+//             }
+//         }
+        
+//         stage('ContinuousBuild'){
+//             steps{
+                
+//                 sh 'mvn clean package'
+//             }
+//         }
+        
+//         stage('SonarQubeAnalysis'){
+//             steps{
+//                 withSonarQubeEnv('Sonar-Server-7.8') {
+//                     sh 'mvn sonar:sonar'
+//                 }
+//             }
+//         }
+//         stage('deploy'){
+//               steps{
+//                  sshagent(['SSH-CREDENTIALS']) {
+//                          sh 'scp -o StrictHostKeyChecking=no webapp/target/webapp.war ec2-user@3.108.54.188:/home/ec2-user/apache-tomcat-9.0.72/webapps'
+//                    }
+
+//               }
+//            }
+//     }
+// }
+
+
+
+
+
 pipeline {
     agent any
     
@@ -182,13 +225,11 @@ pipeline {
         }
         stage('deploy'){
               steps{
-                 sshagent(['SSH-CREDENTIALS']) {
-                         sh 'scp -o StrictHostKeyChecking=no webapp/target/webapp.war ec2-user@3.108.54.188:/home/ec2-user/apache-tomcat-9.0.72/webapps'
+                 sshagent(['ec2-user']) {
+                         sh 'scp -o StrictHostKeyChecking=no webapp/target/webapp.war ec2-user@13.233.96.68:/home/ec2-user/apache-tomcat-9.0.73/webapps'
                    }
 
               }
            }
     }
 }
-
-
